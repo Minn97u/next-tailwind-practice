@@ -14,7 +14,6 @@ const ScrollBar: React.FC = () => {
 
   return (
     <>
-      {/* 상단 스크롤 바 */}
       <div
         style={{
           position: "fixed",
@@ -49,10 +48,8 @@ const ScrollBar: React.FC = () => {
         {scrollYProgress.to((progress) => `${Math.round(progress * 100)}%`)}
       </animated.div>
 
-      {/* 스크롤 가능한 내용 */}
       <div style={{ height: "300vh", width: "100%", padding: "20px" }}>
         <h1>스크롤을 이용해 바 채우기</h1>
-        <p>스크롤을 이용하기</p>
       </div>
     </>
   );

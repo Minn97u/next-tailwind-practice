@@ -16,6 +16,9 @@ const MotionTest: NextPage = () => {
     [-200, 200], //input
     ["#7b2ff7", "#f107a3"] //output
   );
+
+  const transformed2 = useTransform(xMotionValue, () => xMotionValue.get() * 2);
+
   useMotionValueEvent(xMotionValue, "change", (latestValue) => {
     console.log("x축: ", latestValue);
   });
@@ -31,6 +34,7 @@ const MotionTest: NextPage = () => {
         style={{
           x: xMotionValue, //x축이 변화함에 따라 Value값이 변한다.
           y: yMotionValue,
+          height: transformed2,
           backgroundColor: transformedValue,
         }}
         initial={{
