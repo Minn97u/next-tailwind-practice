@@ -2,6 +2,7 @@
 
 import { NextPage } from "next";
 import { useEffect, useRef } from "react";
+import { useInView } from "react-intersection-observer";
 
 const PAGE_TITLES = ["Don't", "you", "just", "hate", "popups?"];
 
@@ -29,6 +30,7 @@ const IO: NextPage = () => {
         threshold: 0.5,
       }
     );
+
 
     if (ref.current) {
       const elems = ref.current.querySelectorAll(".observe");
