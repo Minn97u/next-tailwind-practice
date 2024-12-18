@@ -1,87 +1,73 @@
 "use client";
 
-import * as React from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { NextPage } from "next";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 
-const PAGE_COUNT = 3;
-
-export default function App() {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  // const [textStyles, textApi] = useSpring(() => ({
-  //   y: "100%",
-  // }));
-
-  // 스크롤 진행도
-  const { scrollYProgress } = useScroll({
-    container: containerRef,
-    // onChange: ({ value: { scrollYProgress } }) => {
-    //   if (scrollYProgress > 0.7) {
-    //     textApi.start({ y: "0" });
-    //   } else {
-    //     textApi.start({ y: "100%" });
-    //   }
-    // },
-    // default: {
-    //   immediate: true,
-    // },
-  });
-
-  const smoothScrollY = useSpring(scrollYProgress, {
-    stiffness: 50,
-    damping: 20,
-    mass: 0.5,
-  });
-
-  // 원(circle) 애니메이션
+const ScrollLinked: NextPage = () => {
+  const { scrollYProgress } = useScroll({});
   const clipPath = useTransform(
-    smoothScrollY,
-    [0, 1],
-    ["circle(0%)", "circle(150%)"]
+    scrollYProgress,
+    () => `circle(${scrollYProgress.get() * 100}%)`
   );
 
-  // 텍스트 애니메이션
-  const textOpacity = useTransform(smoothScrollY, [0.7, 0.8], [0, 1]);
-  const textY = useTransform(smoothScrollY, [0.7, 1], ["30%", "0%"]);
-  const backgroundColor = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["#000", "#ff6600"]
-  );
+  // useMotionValue
+  // 애니메이션없이 즉시 바뀜
+  // const y = useMotionValue(100);
+
+  const y = useSpring(100);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    // 0,1,2.... 100
+    if (v > 0.7) {
+      y.set(0);
+    } else {
+      y.set(100);
+    }
+  });
+
+  const textStyle = useTransform(y, () => `${y.get()}%`);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen overflow-y-scroll bg-black text-white"
-    >
-      <motion.div
-        className="fixed inset-0 flex items-center justify-center"
-        style={{
-          clipPath: clipPath,
-          backgroundColor: backgroundColor,
-        }}
-      >
-        <h1 className="text-4xl font-bold text-white text-center">
-          <span className="block overflow-hidden">
-            <motion.span
-              style={{
-                opacity: textOpacity,
-                y: textY,
-              }}
-            >
-              Aha!
-            </motion.span>
-          </span>
-          <span className="block overflow-hidden">
-            <motion.span style={{ opacity: textOpacity, y: textY }}>
-              You found me!
-            </motion.span>
-          </span>
-        </h1>
-      </motion.div>
-
-      {new Array(PAGE_COUNT).fill(null).map((_, index) => (
-        <div key={index} className="h-screen bg-black" />
-      ))}
+    <div className="bg-[#171717] h-[1500px] w-full overflow-y-scroll">
+      <div className="animated_layer">
+        <motion.div
+          style={{
+            clipPath,
+          }}
+          className="bg-orange-400 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
+          <motion.h1 className="title">
+            <span>
+              <motion.span
+                transition={{ duration: 2 }}
+                style={{
+                  y: textStyle,
+                }}
+              >
+                {"Aha!"}
+              </motion.span>
+            </span>
+            <span>
+              <motion.span
+                transition={{ duration: 2 }}
+                style={{
+                  y: textStyle,
+                }}
+              >
+                {"You Found me!"}
+              </motion.span>
+            </span>
+          </motion.h1>
+        </motion.div>
+      </div>
     </div>
   );
-}
+};
+
+export default ScrollLinked;
