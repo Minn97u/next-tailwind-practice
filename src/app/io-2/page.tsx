@@ -45,7 +45,7 @@ const IO: NextPage = () => {
       {PAGE_TITLES.map((title) => (
         <div
           key={title}
-          className="observe transition-all duration-1000 opacity-0 relative top-[100vh] flex justify-center items-center w-[400px] h-[350px]"
+          className="observe transition-all duration-1000 opacity-0 relative top-[100vh] flex justify-center items-center w-[400px] h-[600px]"
         >
           <span className="text-8xl text-neutral-700 font-bold">{title}</span>
         </div>
